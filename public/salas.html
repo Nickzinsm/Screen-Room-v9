@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0b0d12" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Screen Room" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+<meta name="description" content="Screen Room — compartilhamento de tela em baixa latência via WebRTC." />
+<title>Screen Room • salas por código</title>
+<style>
+:root{--sky:#8edcff;--sky2:#dff8ff;--aqua:#28c7d9;--aqua2:#64e8e0;--green:#67c95a;--green2:#b8ef8e;--white:#f8ffff;--ink:#16465a;--muted:#4d7886;--line:#ffffffaa;--glass:#effeffc9;--glass2:#d9f8f8b8;--deep:#147fa0;--shadow:0 18px 45px #08789a35, inset 0 1px #ffffff;--gloss:linear-gradient(180deg,#fff 0%,#e8ffff 48%,#bceff4 100%)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}body{overflow:hidden;-webkit-text-size-adjust:100%;background:linear-gradient(180deg,#65ccec 0%,#b8efff 48%,#d9ffd0 100%);position:relative}body:before,body:after{content:"";position:fixed;pointer-events:none;z-index:-1;border-radius:50%;filter:blur(1px)}body:before{width:38vw;height:38vw;left:-12vw;top:-14vw;background:radial-gradient(circle at 35% 35%,#fff9,transparent 52%),radial-gradient(circle,#65e6e0aa 0 30%,transparent 68%);box-shadow:30vw 16vh 0 2vw #ffffff35,72vw 6vh 0 5vw #ffffff28}body:after{width:52vw;height:24vw;right:-14vw;bottom:-10vw;background:radial-gradient(ellipse,#69ca58aa 0 28%,transparent 68%)}button,input,select{font:inherit}button{cursor:pointer}
+.app{height:100dvh;display:grid;grid-template-rows:68px 1fr;position:relative}.app:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(125deg,#ffffff18,transparent 35%,#00aebd12 70%,#ffffff20);z-index:-1}
+.top{display:flex;align-items:center;gap:12px;padding:0 18px;border-bottom:1px solid #ffffffaa;background:linear-gradient(180deg,#ffffffdc,#dffcffb8);backdrop-filter:blur(18px);box-shadow:0 5px 20px #147fa025,inset 0 1px #fff;z-index:3}.brand{font-weight:900;letter-spacing:-.3px;white-space:nowrap;color:#126984;font-size:18px;text-shadow:0 1px #fff}.brand b{color:#1aaebd}.room-pill{display:flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid #ffffffcc;border-radius:999px;color:#1d6174;background:#efffffc9;box-shadow:0 5px 14px #087b9825,inset 0 1px #fff}.room-pill span{font-size:10px;font-weight:900;letter-spacing:1px;color:#5d8995}.room-pill code{font-weight:900;letter-spacing:.8px}.copy{padding:5px 9px;border-radius:999px;background:var(--gloss);color:#176278;border:1px solid #8bdbe1;box-shadow:0 2px 5px #087b9830}.status{margin-left:auto;color:#3f7180;font-size:13px;font-weight:700;white-space:nowrap}.main{min-height:0;display:grid;grid-template-columns:255px 1fr;padding:12px;gap:12px}.side{min-width:0;border:1px solid #ffffffb8;border-radius:22px;padding:16px;background:linear-gradient(180deg,#ffffffc7,#e7ffff9e);box-shadow:var(--shadow);backdrop-filter:blur(16px);overflow:auto}.section-title{display:flex;justify-content:space-between;align-items:center;color:#367181;font-size:11px;text-transform:uppercase;letter-spacing:1.2px;font-weight:900;margin:4px 9px 12px}.count{color:#16869b;background:#d7f9f4;border:1px solid #9be1dc;border-radius:999px;padding:2px 7px}.peer{display:flex;align-items:center;gap:10px;padding:10px;border-radius:15px;color:#245c6c;transition:.18s}.peer:hover{background:#ffffff9c;box-shadow:inset 0 1px #fff}.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#fff,#aaf2ec 42%,#51c9c4 100%);border:2px solid #fff;box-shadow:0 4px 10px #087b9830;color:#167082;font-size:12px;font-weight:900}.peer-info{min-width:0}.peer-name{font-size:14px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.peer-state{font-size:11px;color:#5d8791;margin-top:1px}.dot{width:9px;height:9px;border-radius:50%;background:#9bb4b8;margin-left:auto;border:1px solid #fff}.dot.on{background:#62ca5b;box-shadow:0 0 0 3px #a8ef9b55,0 0 12px #55bd4c99}.content{min-width:0;min-height:0;display:grid;grid-template-rows:1fr auto;border:1px solid #ffffffb8;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#eaffff75,#c8f7ff66);box-shadow:var(--shadow);backdrop-filter:blur(12px)}.videos{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;padding:14px;overflow:auto;align-content:start;background:radial-gradient(circle at 50% 0,#ffffff72,transparent 45%)}.tile{position:relative;min-height:220px;background:linear-gradient(145deg,#0b7797,#063e56);border:2px solid #ffffffc9;border-radius:19px;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 25px #07516c42,inset 0 1px #fff}.tile:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,#ffffff25 0 15%,transparent 28% 72%,#7ef7e022 100%)}.tile video{display:block;width:100%;height:100%;min-height:220px;object-fit:contain;background:#062c3c}.label{position:absolute;left:11px;bottom:11px;padding:7px 11px;border-radius:999px;background:#f5ffffdf;border:1px solid #ffffff;color:#1b5d70;font-size:12px;font-weight:800;backdrop-filter:blur(10px);box-shadow:0 4px 12px #003b4c35}.badge{position:absolute;top:11px;right:11px;padding:6px 9px;border-radius:999px;background:#dfffffd9;border:1px solid #fff;color:#217286;font-size:11px;font-weight:800;box-shadow:0 3px 10px #003b4c25}.empty{grid-column:1/-1;min-height:calc(100dvh - 190px);display:grid;place-items:center;text-align:center;color:var(--muted);padding:30px}.empty-card{max-width:580px;padding:34px 38px;border-radius:28px;background:linear-gradient(180deg,#ffffffc9,#e6ffffa6);border:1px solid #fff;box-shadow:0 14px 35px #087b9822,inset 0 1px #fff;backdrop-filter:blur(14px)}.empty-card:before{content:"◈";display:grid;place-items:center;width:58px;height:58px;margin:0 auto 15px;border-radius:50%;font-size:27px;color:#fff;background:linear-gradient(145deg,#6be5dd,#29aebf);border:3px solid #fff;box-shadow:0 7px 15px #087b9840,inset 0 2px #fff}.empty strong{display:block;color:#166178;font-size:24px;margin-bottom:8px}.empty p{margin:0;line-height:1.55}.controls{display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 14px;border-top:1px solid #ffffffb8;background:linear-gradient(180deg,#ffffffb8,#d9f8f7c9);flex-wrap:wrap;padding-bottom:calc(13px + env(safe-area-inset-bottom));box-shadow:0 -6px 18px #087b9818}.ctrl{background:var(--gloss);color:#1c6173;border:1px solid #91dce1;border-radius:13px;padding:10px 14px;min-height:43px;font-weight:800;box-shadow:0 4px 9px #087b9828,inset 0 1px #fff;transition:transform .12s,box-shadow .12s,filter .12s}.ctrl:hover:not(:disabled){transform:translateY(-1px);filter:saturate(1.08);box-shadow:0 6px 13px #087b9830,inset 0 1px #fff}.ctrl:active:not(:disabled){transform:translateY(1px)}.ctrl.primary{color:#fff;background:linear-gradient(180deg,#4ee1df,#19aebe);border-color:#5be6df;box-shadow:0 5px 13px #087b9840,inset 0 2px #ffffff88}.ctrl.primary:hover:not(:disabled){background:linear-gradient(180deg,#66e8df,#1ab1bf)}.ctrl.danger{color:#fff;background:linear-gradient(180deg,#ff9c92,#ed625f);border-color:#ffb2aa}.ctrl:disabled{opacity:.48;cursor:not-allowed;filter:grayscale(.2)}.ctrl.icon{min-width:43px;padding:10px}.quality{appearance:none;background:linear-gradient(180deg,#ffffff,#d8fbfa);padding-right:14px}.hint{font-size:11px;color:#668a93;padding:0 10px}.modal{position:fixed;inset:0;background:linear-gradient(#42c7e36b,#d7ffd173),radial-gradient(600px 350px at 50% 0,#ffffffbb,transparent 70%);backdrop-filter:blur(9px);display:grid;place-items:center;z-index:10;padding:20px;overflow:auto}.card{width:min(500px,94vw);background:linear-gradient(180deg,#ffffffec,#e5ffffdf);border:2px solid #ffffff; border-radius:30px;padding:27px;box-shadow:0 25px 65px #075b7445,inset 0 2px #fff;backdrop-filter:blur(20px);position:relative;overflow:hidden}.card:before{content:"";position:absolute;width:180px;height:80px;right:-50px;top:-35px;border-radius:50%;background:#fff8;transform:rotate(-18deg)}.logo-mark{width:70px;height:70px;display:grid;place-items:center;font-size:33px;color:#fff;border-radius:22px;background:linear-gradient(145deg,#6be6dc,#20a8ba);border:3px solid #fff;box-shadow:0 10px 20px #087b9840,inset 0 2px #ffffffaa;margin-bottom:10px}.card h1{margin:4px 0 7px;font-size:30px;letter-spacing:-.8px;color:#155b70}.card p{color:#4d7886;margin:0 0 20px;line-height:1.5}.field{margin:12px 0}.field label{display:block;color:#296779;font-size:13px;font-weight:800;margin-bottom:7px}.field input{width:100%;background:#f8ffffd9;border:1px solid #8edbe0;color:#164e60;border-radius:13px;padding:13px;outline:none;box-shadow:inset 0 2px 7px #087b9812,0 2px #fff}.field input::placeholder{color:#8aaab2}.field input:focus{border-color:#2ac1c9;box-shadow:0 0 0 4px #49d7d82b,inset 0 2px 7px #087b9812}.row{display:flex;gap:10px}.row>*{flex:1}.mini-actions{display:flex;gap:8px;margin-top:8px}.install-btn{display:none;background:linear-gradient(180deg,#fff,#d9f8f8);color:#176278;border:1px solid #91dce1;border-radius:12px;padding:9px 10px;font-size:12px;font-weight:800;box-shadow:0 4px 9px #087b9825}.install-btn.show{display:inline-flex;align-items:center;gap:6px}.secondary{font-size:12px;color:#277184;background:transparent;border:0;padding:7px 0;text-align:left;font-weight:800}.hide{display:none!important}.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:linear-gradient(180deg,#ffffff,#d9f8f8);border:1px solid #fff;padding:11px 15px;border-radius:999px;color:#1b6172;box-shadow:0 12px 25px #075b7440;z-index:20;font-size:13px;font-weight:800}.mobile-menu{display:none}
+@media(max-width:900px){.main{grid-template-columns:1fr;padding:8px}.side{display:none}.mobile-menu{display:inline-flex}.brand{font-size:15px}.videos{grid-template-columns:1fr;padding:9px}.tile{min-height:240px}.tile video{min-height:240px}.empty{min-height:50vh}.top{padding:0 10px}.room-pill{padding:6px 9px}.status{font-size:11px}.controls{gap:7px}}
+@media(max-width:620px){.room-pill code{max-width:96px;overflow:hidden;text-overflow:ellipsis}.quality{max-width:145px}.ctrl{min-height:40px;padding:9px 11px}.ctrl.primary{flex:1}.hint{display:none}.modal{padding:12px;padding-top:max(12px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom));place-items:center}.card{width:min(480px,100%);max-height:calc(100dvh - 24px);overflow:auto;padding:21px;border-radius:24px}.card h1{font-size:26px}.card p{font-size:14px;margin-bottom:16px}.row{flex-direction:column;gap:8px}.row .ctrl{width:100%}.install-btn{width:100%;justify-content:center;margin-top:10px}.secondary{width:100%}.app{min-height:100dvh;height:auto;grid-template-rows:56px 1fr}.top{min-height:56px}.controls{padding-left:10px;padding-right:10px}.controls .ctrl.primary{min-width:0}.empty strong{font-size:20px}.empty-card{padding:27px 20px;border-radius:24px}.logo-mark{width:62px;height:62px}.side{border-radius:18px}}
+
+/* ===== Frutiger Aero Night theme ===== */
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:43px;height:43px;padding:0 12px;border-radius:999px;border:1px solid #ffffffaa;background:linear-gradient(180deg,#ffffffdf,#dffcffb8);color:#176278;font-weight:900;box-shadow:0 5px 14px #087b9830,inset 0 1px #fff;transition:transform .15s,filter .15s,box-shadow .15s;white-space:nowrap}
+.theme-toggle:hover{transform:translateY(-1px);filter:saturate(1.1);box-shadow:0 7px 16px #087b9840,inset 0 1px #fff}
+.theme-toggle:active{transform:translateY(1px)}
+.login-theme{position:fixed;top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));z-index:30}
+.theme-icon{font-size:18px;line-height:1}.theme-label{font-size:12px}
+
+body[data-theme="night"]{color:#dffcff;background:linear-gradient(180deg,#071a35 0%,#063d62 46%,#062f3b 100%)}
+body[data-theme="night"]:before{background:radial-gradient(circle at 35% 35%,#b9f7ff18,transparent 52%),radial-gradient(circle,#19b9d855 0 30%,transparent 68%);box-shadow:30vw 16vh 0 2vw #8cecff12,72vw 6vh 0 5vw #49cfe812}
+body[data-theme="night"]:after{background:radial-gradient(ellipse,#42a95644 0 28%,transparent 68%)}
+body[data-theme="night"] .app:before{background:linear-gradient(125deg,#8beeff0c,transparent 35%,#00e6ff0c 70%,#ffffff0b)}
+body[data-theme="night"] .top{border-bottom-color:#72e8ff44;background:linear-gradient(180deg,#12395ddd,#092a46cc);box-shadow:0 5px 22px #00121f80,inset 0 1px #b9f7ff33}
+body[data-theme="night"] .brand{color:#b8f7ff;text-shadow:0 1px #001a2a}.brand b{color:#63e7ed}
+body[data-theme="night"] .room-pill{border-color:#72e8ff44;color:#c9fbff;background:#0e3b54c9;box-shadow:0 5px 14px #001b2a66,inset 0 1px #b9f7ff22}
+body[data-theme="night"] .room-pill span{color:#75b8c7}.room-pill code{color:#e1ffff}
+body[data-theme="night"] .copy{background:linear-gradient(180deg,#235a6d,#123c52);color:#d9ffff;border-color:#54cbd655;box-shadow:0 2px 7px #001b2a66,inset 0 1px #b9f7ff22}
+body[data-theme="night"] .status{color:#8fc4d0}
+body[data-theme="night"] .side{border-color:#72e8ff33;background:linear-gradient(180deg,#123b55cc,#092d43b5);box-shadow:0 18px 45px #001a2b80,inset 0 1px #b9f7ff22}
+body[data-theme="night"] .section-title{color:#8bcbd6}.count{color:#7feef0;background:#104b5d;border-color:#39c4ca66}
+body[data-theme="night"] .peer{color:#c9f4f7}.peer:hover{background:#70e8ff12;box-shadow:inset 0 1px #b9f7ff1c}.peer-state{color:#79aeba}
+body[data-theme="night"] .avatar{background:radial-gradient(circle at 35% 25%,#eaffff,#66d9dc 42%,#126d7a 100%);border-color:#d8ffff;color:#073d4b;box-shadow:0 4px 13px #001c2a80}
+body[data-theme="night"] .dot{background:#496873;border-color:#b7efff66}.dot.on{background:#68df72;box-shadow:0 0 0 3px #64e97922,0 0 14px #64e97988}
+body[data-theme="night"] .content{border-color:#72e8ff33;background:linear-gradient(180deg,#0d405a70,#062d4266);box-shadow:0 18px 45px #001a2b80,inset 0 1px #b9f7ff1b}
+body[data-theme="night"] .videos{background:radial-gradient(circle at 50% 0,#7deaff12,transparent 45%)}
+body[data-theme="night"] .tile{background:linear-gradient(145deg,#07546f,#031b31);border-color:#9deeff66;box-shadow:0 12px 25px #00152499,inset 0 1px #d7fbff44}.tile:after{background:linear-gradient(115deg,#dffcff12 0 15%,transparent 28% 72%,#62fff01c 100%)}
+body[data-theme="night"] .tile video{background:#020f1b}.label{background:#082d40dd;border-color:#76dcea66;color:#d8fbff;box-shadow:0 4px 12px #00121f70}.badge{background:#0a4054dd;border-color:#8cefff55;color:#bffaff;box-shadow:0 3px 10px #00121f70}
+body[data-theme="night"] .empty{color:#8ebcc7}.empty-card{background:linear-gradient(180deg,#123e57d9,#092d42c7);border-color:#9deeff55;box-shadow:0 14px 35px #00121f80,inset 0 1px #d7fbff33}.empty-card:before{background:linear-gradient(145deg,#53dfe0,#137c9d);border-color:#d9ffff;box-shadow:0 7px 15px #00121f80,inset 0 2px #ffffff44}.empty strong{color:#d7fbff}
+body[data-theme="night"] .controls{border-top-color:#72e8ff33;background:linear-gradient(180deg,#123b55c7,#082c43d6);box-shadow:0 -6px 18px #00121f60}
+body[data-theme="night"] .ctrl{background:linear-gradient(180deg,#1a5368,#10374e);color:#d9fbff;border-color:#67d9e055;box-shadow:0 4px 9px #00121f66,inset 0 1px #d7fbff22}.ctrl.primary{color:#fff;background:linear-gradient(180deg,#35d9d5,#0b7e9b);border-color:#68ece655;box-shadow:0 5px 13px #00121f70,inset 0 2px #ffffff33}.ctrl.primary:hover:not(:disabled){background:linear-gradient(180deg,#51e4df,#0c8aa5)}.ctrl.danger{background:linear-gradient(180deg,#d96e71,#a83f51);border-color:#ff9a9a55}.quality{background:linear-gradient(180deg,#1a5368,#10374e)}
+body[data-theme="night"] .hint{color:#75a5b1}.modal{background:linear-gradient(#071b3cbb,#073e4fbb),radial-gradient(600px 350px at 50% 0,#72e9ff20,transparent 70%)}
+body[data-theme="night"] .card{background:linear-gradient(180deg,#123d56f0,#092d43e8);border-color:#b8f7ff55;box-shadow:0 25px 65px #000c18aa,inset 0 2px #d7fbff33}.card:before{background:#bdf8ff0d}.logo-mark{background:linear-gradient(145deg,#53e6df,#147e9e);border-color:#d9ffff;box-shadow:0 10px 20px #00121f80,inset 0 2px #ffffff44}.card h1{color:#d9fcff}.card p{color:#9bc9d3}.field label{color:#9fe0e5}.field input{background:#06283bdd;border-color:#54cad355;color:#dffcff;box-shadow:inset 0 2px 7px #00121f70,0 2px #b9f7ff12}.field input::placeholder{color:#6e9ca8}.field input:focus{border-color:#4de0dc;box-shadow:0 0 0 4px #49d7d82b,inset 0 2px 7px #00121f70}.install-btn{background:linear-gradient(180deg,#1a5368,#10374e);color:#d9fbff;border-color:#67d9e055}.secondary{color:#80d0da}.toast{background:linear-gradient(180deg,#16485e,#0b3046);border-color:#9deeff55;color:#d9fbff;box-shadow:0 12px 25px #00121f80}
+body[data-theme="night"] .theme-toggle{background:linear-gradient(180deg,#1c5a70,#10374d);border-color:#72e8ff55;color:#dcffff;box-shadow:0 5px 14px #00121f70,inset 0 1px #d7fbff22}
+
+@media(max-width:620px){.login-theme{top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));height:40px}.theme-label{display:none}.theme-toggle{min-width:40px;padding:0 10px}.card{padding-top:23px}}
+
+</style>
+
+<style id="v7-aero-typography-contrast">
+/* Screen Room v7 — stronger Frutiger Aero + accessible typography/contrast */
+html,body,button,input,select,textarea{font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;}
+body{font-size:15px;letter-spacing:.05px;}
+.brand,.card h1,.empty strong{font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;}
+.ctrl,.theme-toggle,.copy,.install-btn,.secondary,.field label,.section-title,.peer-name,.status,.room-pill code,.label,.badge,.hint{font-weight:900;}
+.ctrl,.theme-toggle,.copy,.install-btn{font-size:14px;line-height:1.15;text-shadow:0 1px rgba(255,255,255,.55);}
+.field input,.quality{font-weight:700;}
+.field input{font-size:15px;}
+.field input::placeholder{opacity:1;}
+
+/* Extra Aero gloss, bubbles and organic highlights */
+body:before{box-shadow:30vw 16vh 0 2vw #ffffff42,72vw 6vh 0 5vw #ffffff35, -10vw 56vh 0 1.5vw #59d7e36b;}
+body:after{box-shadow:-30vw -8vh 0 4vw #ffffff16;}
+.app:after{content:"";position:absolute;right:4vw;top:86px;width:120px;height:34px;border-radius:50%;background:linear-gradient(180deg,#fff8,transparent);filter:blur(.5px);opacity:.65;pointer-events:none;}
+.card:after{content:"";position:absolute;left:-8%;bottom:-16px;width:116%;height:58px;border-radius:50%;background:linear-gradient(180deg,#ffffff48,transparent);transform:rotate(-2deg);pointer-events:none;}
+.tile:before{content:"";position:absolute;left:-22%;top:-35%;width:72%;height:48%;border-radius:50%;background:radial-gradient(circle,#ffffff34,transparent 68%);transform:rotate(-16deg);pointer-events:none;z-index:1;}
+
+/* Light-mode contrast: dark ink on bright glass */
+body[data-theme="light"] .ctrl,
+body[data-theme="light"] .theme-toggle,
+body[data-theme="light"] .copy,
+body[data-theme="light"] .install-btn{color:#124d61;}
+body[data-theme="light"] .secondary{color:#14556a;text-shadow:0 1px #fff;}
+body[data-theme="light"] .status{color:#285f70;}
+body[data-theme="light"] .hint{color:#3d6d79;}
+body[data-theme="light"] .peer-state{color:#426f7b;}
+body[data-theme="light"] .field label{color:#1f5c6f;}
+body[data-theme="light"] .field input{color:#103f52;background:#ffffffee;border-color:#69cbd5;}
+body[data-theme="light"] .field input::placeholder{color:#648995;}
+body[data-theme="light"] .quality{color:#123f51;border-color:#69cbd5;}
+
+/* Night-mode contrast: brighter text and clearer control edges */
+body[data-theme="night"] .ctrl,
+body[data-theme="night"] .theme-toggle,
+body[data-theme="night"] .copy,
+body[data-theme="night"] .install-btn{color:#f0ffff;text-shadow:0 1px #062438;}
+body[data-theme="night"] .secondary{color:#bff7ff;text-shadow:0 1px #001b2b;}
+body[data-theme="night"] .ctrl{border-color:#70e8eeaa;}
+body[data-theme="night"] .ctrl.primary{color:#ffffff;border-color:#9afcf4aa;}
+body[data-theme="night"] .ctrl.danger{color:#ffffff;border-color:#ffb6b6aa;}
+body[data-theme="night"] .status{color:#b5e6ee;}
+body[data-theme="night"] .hint{color:#9bcbd4;}
+body[data-theme="night"] .peer-state{color:#94c9d3;}
+body[data-theme="night"] .field label{color:#b9f3f1;}
+body[data-theme="night"] .field input{color:#f0ffff;background:#052333f2;border-color:#64dbe4aa;}
+body[data-theme="night"] .field input::placeholder{color:#88b9c4;}
+body[data-theme="night"] .quality{color:#f0ffff;border-color:#6adbe4aa;}
+
+.ctrl:focus-visible,.theme-toggle:focus-visible,.copy:focus-visible,.install-btn:focus-visible,.secondary:focus-visible,.field input:focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 6px #18aebd66,0 7px 14px #00596d33;}
+body[data-theme="night"] .ctrl:focus-visible,body[data-theme="night"] .theme-toggle:focus-visible,body[data-theme="night"] .copy:focus-visible,body[data-theme="night"] .install-btn:focus-visible,body[data-theme="night"] .secondary:focus-visible,body[data-theme="night"] .field input:focus-visible{outline-color:#cfffff;box-shadow:0 0 0 6px #36d7e055,0 7px 14px #000c1866;}
+@media(max-width:620px){.ctrl,.theme-toggle{min-height:44px}.field input{min-height:48px}.card h1{font-size:28px}}
+</style>
+
+</head>
+<body>
+<div id="modal" class="modal">
+  <button id="themeToggleLogin" class="theme-toggle login-theme" type="button" aria-label="Alternar tema"><span class="theme-icon">☀️</span><span class="theme-label">Claro</span></button>
+  <div class="card">
+    <div class="logo-mark">◈</div>
+    <h1>Screen Room</h1>
+    <p>Compartilhe a tela com baixa latência. Crie uma sala, envie o código e seus amigos entram pelo navegador — PC ou celular.</p>
+    <div class="field"><label>Seu nome</label><input id="name" placeholder="Ex.: GHOSTIN" maxlength="24" autocomplete="nickname"></div>
+    <div class="field"><label>Código da sala</label><input id="room" placeholder="Ex.: GAMING-123" maxlength="32" autocomplete="off"></div>
+    <div class="row"><button id="newRoom" class="ctrl">Criar sala</button><button id="join" class="ctrl primary">Entrar</button></div>
+    <button id="installApp" class="install-btn" type="button">⬇️ Instalar como app</button>
+    <button id="copyLink" class="secondary hide">Copiar link desta sala</button>
+    <div class="hint" style="margin-top:12px">Use HTTPS no endereço público. Chrome/Edge/Firefox têm o melhor suporte para compartilhamento de tela.</div>
+  </div>
+</div>
+<div id="toast" class="toast hide"></div>
+<div class="app">
+  <header class="top">
+    <button id="mobileMenu" class="ctrl icon mobile-menu">☰</button>
+    <div class="brand">◈ Screen <b>Room</b></div>
+    <div id="roomPill" class="room-pill hide"><span>SALA</span><code id="roomCode">—</code><button id="copyRoom" class="copy">Copiar</button></div>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Alternar tema"><span class="theme-icon">☀️</span><span class="theme-label">Claro</span></button>
+    <div id="status" class="status">Desconectado</div>
+  </header>
+  <main class="main">
+    <aside id="side" class="side">
+      <div class="section-title"><span>Pessoas</span><span id="peerCount" class="count">0</span></div>
+      <div id="peers"></div>
+    </aside>
+    <section class="content">
+      <div id="videos" class="videos">
+        <div class="empty"><div class="empty-card"><strong>Nenhuma transmissão</strong><p>Quando alguém compartilhar a tela, o vídeo aparecerá aqui. A transmissão é feita diretamente entre os navegadores sempre que possível.</p></div></div>
+      </div>
+      <div class="controls">
+        <button id="share" class="ctrl primary">🖥️ Compartilhar tela</button>
+        <button id="stop" class="ctrl danger" disabled>■ Parar</button>
+        <select id="quality" class="ctrl quality" aria-label="Qualidade">
+          <option value="2160">4K / 30 FPS</option>
+          <option value="1440" selected>1440p / 60 FPS</option>
+          <option value="1080">1080p / 60 FPS</option>
+          <option value="720">720p / 60 FPS</option>
+        </select>
+        <button id="mute" class="ctrl icon" title="Ativar/desativar áudio da tela">🔊</button>
+        <button id="callSafe" class="ctrl" title="Evita enviar o áudio do sistema durante chamadas do WhatsApp/Discord">📞 Modo chamada</button>
+        <button id="fullscreenAll" class="ctrl icon" title="Tela cheia">⛶</button>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+let ws, myId, room, name, maxPeers = 12;
+let screenStream = null;
+const peers = new Map();
+const sendingPCs = new Map();
+const receivingPCs = new Map();
+const pendingIce = new Map();
+let audioMuted = false;
+let callSafeMode = false; try{ callSafeMode = localStorage.getItem('screen-room-call-safe') === '1'; }catch{}
+let reconnectTimer = null;
+
+function wsUrl(){
+  const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+  return `${protocol}://${location.host}/signal`;
+}
+function setStatus(text){ $('status').textContent = text; }
+function send(msg){ if(ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(msg)); }
+function showToast(text){ const t=$('toast'); t.textContent=text; t.classList.remove('hide'); clearTimeout(showToast.t); showToast.t=setTimeout(()=>t.classList.add('hide'),2200); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function avatar(name){ return escapeHtml((name||'?').trim().slice(0,1).toUpperCase()); }
+function randomRoom(){ return 'ROOM-' + Math.random().toString(36).slice(2,8).toUpperCase(); }
+function roomLink(){ return `${location.origin}/salas.html?room=${encodeURIComponent(room)}`; }
+async function copyText(text){ try{ await navigator.clipboard.writeText(text); showToast('Copiado!'); }catch{ prompt('Copie o texto:',text); } }
+
+const THEME_KEY = 'screen-room-theme';
+function applyTheme(theme){
+  const night = theme === 'night';
+  document.body.dataset.theme = night ? 'night' : 'light';
+  const icon = night ? '🌙' : '☀️';
+  const label = night ? 'Night' : 'Claro';
+  document.querySelectorAll('.theme-toggle').forEach(btn => {
+    const i=btn.querySelector('.theme-icon'), l=btn.querySelector('.theme-label');
+    if(i) i.textContent=icon; if(l) l.textContent=label;
+    btn.setAttribute('aria-label', night ? 'Ativar tema claro' : 'Ativar tema Frutiger Aero Night');
+    btn.setAttribute('title', night ? 'Tema Frutiger Aero Night' : 'Tema Frutiger Aero Claro');
+  });
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.content = night ? '#071a35' : '#65ccec';
+  try{ localStorage.setItem(THEME_KEY, night ? 'night' : 'light'); }catch{}
+}
+function toggleTheme(){ applyTheme(document.body.dataset.theme === 'night' ? 'light' : 'night'); }
+let savedTheme='light'; try{ savedTheme=localStorage.getItem(THEME_KEY) || 'light'; }catch{}
+applyTheme(savedTheme);
+$('themeToggle')?.addEventListener('click',toggleTheme);
+$('themeToggleLogin')?.addEventListener('click',toggleTheme);
+
+$('newRoom').onclick = () => { $('room').value = randomRoom(); $('room').focus(); };
+$('join').onclick = join;
+$('room').addEventListener('keydown',e=>{ if(e.key==='Enter') join(); });
+$('copyRoom').onclick = () => copyText(room);
+$('copyLink').onclick = () => copyText(roomLink());
+$('mobileMenu').onclick = () => $('side').classList.toggle('hide');
+
+async function join(){
+  name = $('name').value.trim() || 'Convidado';
+  room = ($('room').value.trim() || '').toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,32);
+  if(!room){ showToast('Digite um código de sala.'); return; }
+  $('modal').classList.add('hide');
+  $('roomPill').classList.remove('hide');
+  $('roomCode').textContent = room;
+  $('copyLink').classList.remove('hide');
+  connect();
+}
+
+function connect(){
+  clearTimeout(reconnectTimer);
+  try{ ws?.close(); }catch{}
+  setStatus('Conectando…');
+  ws = new WebSocket(wsUrl());
+  ws.onopen = () => { send({type:'join',room,name}); };
+  ws.onclose = () => {
+    for(const p of [...peers.keys()]) removePeer(p);
+    setStatus('Reconectando…');
+    clearTimeout(reconnectTimer);
+    reconnectTimer = setTimeout(()=>connect(),1800);
+  };
+  ws.onerror = () => setStatus('Erro de conexão');
+  ws.onmessage = async (e) => {
+    try{ await handle(JSON.parse(e.data)); }catch(err){ console.error(err); }
+  };
+}
+
+async function handle(m){
+  if(m.type==='error'){
+    if(m.code==='ROOM_FULL'){ showToast('Sala cheia.'); }
+    else showToast(m.message || 'Erro.');
+    setStatus('Não foi possível entrar');
+    return;
+  }
+  if(m.type==='joined'){
+    if(Array.isArray(m.iceServers)) rtcConfig.iceServers=m.iceServers;
+    myId=m.id; maxPeers=m.maxPeers || 12; setStatus('Conectado');
+    (m.peers||[]).forEach(addPeer); renderPeers();
+    for(const p of peers.values()) if(screenStream) await makeSenderPC(p.id);
+    return;
+  }
+  if(m.type==='peer-joined'){
+    addPeer(m.peer); renderPeers();
+    if(screenStream) await makeSenderPC(m.peer.id);
+    return;
+  }
+  if(m.type==='peer-left'){
+    removePeer(m.id); renderPeers(); return;
+  }
+  if(m.type==='share-state'){
+    if(peers.has(m.id)){ peers.get(m.id).sharing=!!m.sharing; renderPeers(); }
+    return;
+  }
+  if(m.type==='offer'){ await onOffer(m); return; }
+  if(m.type==='answer'){
+    // The answer belongs to the peer connection created by the screen sender.
+    const pc=sendingPCs.get(m.from);
+    if(!pc) return;
+    try{
+      await pc.setRemoteDescription(m.answer);
+      await flushPendingIce(m.from, pc);
+    }catch(err){ console.error('Falha ao aplicar answer:', err); }
+    return;
+  }
+  if(m.type==='ice'){
+    if(!m.candidate) return;
+    const pc=sendingPCs.get(m.from)||receivingPCs.get(m.from);
+    if(!pc || !pc.remoteDescription){
+      const list=pendingIce.get(m.from)||[];
+      list.push(m.candidate); pendingIce.set(m.from,list);
+      return;
+    }
+    try{ await pc.addIceCandidate(m.candidate); }catch(err){ console.warn('ICE rejeitado:', err); }
+  }
+}
+
+async function flushPendingIce(id, pc){
+  const list=pendingIce.get(id)||[];
+  if(!list.length) return;
+  pendingIce.delete(id);
+  for(const candidate of list){
+    try{ await pc.addIceCandidate(candidate); }catch(err){ console.warn('Falha ao adicionar ICE em fila:', err); }
+  }
+}
+
+function addPeer(p){ if(p.id===myId) return; peers.set(p.id,{...p}); }
+function removePeer(id){
+  peers.delete(id);
+  const maps=[sendingPCs,receivingPCs];
+  maps.forEach(map=>{ const pc=map.get(id); if(pc) pc.close(); map.delete(id); });
+  pendingIce.delete(id);
+  document.querySelector(`[data-peer="${CSS.escape(id)}"]`)?.remove();
+  if(!document.querySelector('.tile')) renderEmpty();
+}
+function renderPeers(){
+  const el=$('peers'); el.innerHTML=''; $('peerCount').textContent = String(peers.size + 1);
+  const me=document.createElement('div'); me.className='peer'; me.innerHTML=`<div class="avatar">${avatar(name)}</div><div class="peer-info"><div class="peer-name">${escapeHtml(name)} (você)</div><div class="peer-state">${screenStream?'Transmitindo':'Online'}</div></div><i class="dot ${screenStream?'on':''}"></i>`; el.appendChild(me);
+  for(const p of peers.values()){
+    const d=document.createElement('div'); d.className='peer'; d.innerHTML=`<div class="avatar">${avatar(p.name)}</div><div class="peer-info"><div class="peer-name">${escapeHtml(p.name)}</div><div class="peer-state">${p.sharing?'Compartilhando tela':'Online'}</div></div><i class="dot ${p.sharing?'on':''}"></i>`; el.appendChild(d);
+  }
+}
+
+const rtcConfig={
+  iceServers:[
+    {urls:'stun:stun.l.google.com:19302'},
+    {urls:'stun:stun.cloudflare.com:3478'}
+  ],
+  bundlePolicy:'max-bundle'
+};
+function basePC(id){
+  const pc=new RTCPeerConnection(rtcConfig);
+  pc.onicecandidate=e=>{ if(e.candidate) send({type:'ice',to:id,candidate:e.candidate}); };
+  pc.onconnectionstatechange=()=>{ if(['failed','closed'].includes(pc.connectionState)){ try{pc.close();}catch{} } };
+  return pc;
+}
+
+async function makeSenderPC(id){
+  if(!screenStream || sendingPCs.has(id) || !peers.has(id)) return;
+  const pc=basePC(id); sendingPCs.set(id,pc);
+  for(const track of screenStream.getTracks()) pc.addTrack(track,screenStream);
+  await applyQuality(pc);
+  const offer=await pc.createOffer({offerToReceiveAudio:false,offerToReceiveVideo:false});
+  await pc.setLocalDescription(offer);
+  send({type:'offer',to:id,offer:pc.localDescription});
+}
+
+async function applyQuality(pc){
+  const q=Number($('quality').value); const sender=pc.getSenders().find(s=>s.track?.kind==='video'); if(!sender) return;
+  try{
+    const params=sender.getParameters();
+    params.encodings=params.encodings?.length ? params.encodings : [{}];
+    params.encodings[0].maxBitrate=q>=2160?18000000:q>=1440?12000000:q>=1080?8000000:4500000;
+    params.encodings[0].maxFramerate=q>=1440?60:30;
+    await sender.setParameters(params);
+  }catch{}
+}
+
+async function onOffer(m){
+  const old=receivingPCs.get(m.from); if(old) old.close();
+  const pc=basePC(m.from); receivingPCs.set(m.from,pc);
+  pc.ontrack=e=>{
+    const stream=e.streams?.[0] || new MediaStream([e.track]);
+    addVideo(m.from,stream);
+  };
+  try{
+    await pc.setRemoteDescription(m.offer);
+    await flushPendingIce(m.from, pc);
+    const answer=await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    send({type:'answer',to:m.from,answer:pc.localDescription});
+  }catch(err){
+    console.error('Falha ao responder oferta WebRTC:', err);
+    showToast('Falha ao conectar a transmissão.');
+  }
+}
+
+function renderEmpty(){
+  if(document.querySelector('.empty')) return;
+  if(!document.querySelector('.tile')) $('videos').innerHTML='<div class="empty"><div class="empty-card"><strong>Nenhuma transmissão</strong><p>Quando alguém compartilhar a tela, o vídeo aparecerá aqui.</p></div></div>';
+}
+function addVideo(id,stream){
+  let tile=document.querySelector(`[data-peer="${CSS.escape(id)}"]`);
+  if(!tile){
+    tile=document.createElement('div'); tile.className='tile'; tile.dataset.peer=id;
+    const p=peers.get(id); tile.innerHTML=`<video autoplay playsinline controlslist="nodownload noremoteplayback"></video><div class="label">${escapeHtml(p?.name||'Transmissão')}</div><div class="badge">WebRTC • P2P</div><button class="ctrl icon" style="position:absolute;right:10px;bottom:10px" onclick="fullscreenTile(this.parentElement)">⛶</button>`;
+    $('videos').querySelector('.empty')?.remove(); $('videos').appendChild(tile);
+  }
+  const v=tile.querySelector('video');
+  if(v.srcObject!==stream) v.srcObject=stream;
+  v.muted = false;
+  v.play().catch(()=>{
+    // Some browsers block autoplay. A visible video can still be started by tapping it.
+    v.controls = true;
+  });
+  stream.getVideoTracks().forEach(track=>{ track.enabled=true; });
+}
+function renderLocal(){
+  $('localTile')?.remove(); const tile=document.createElement('div'); tile.className='tile'; tile.id='localTile';
+  tile.innerHTML=`<video autoplay muted playsinline></video><div class="label">${escapeHtml(name)} • você</div><div class="badge">Sua tela</div><button class="ctrl icon" style="position:absolute;right:10px;bottom:10px" onclick="fullscreenTile(this.parentElement)">⛶</button>`;
+  tile.querySelector('video').srcObject=screenStream; $('videos').querySelector('.empty')?.remove(); $('videos').prepend(tile);
+}
+function fullscreenTile(tile){ const el=tile.querySelector('video')||tile; (el.requestFullscreen||el.webkitRequestFullscreen)?.call(el); }
+
+async function share(){
+  if(screenStream) return;
+  if(!navigator.mediaDevices?.getDisplayMedia){ showToast('Seu navegador não permite captura de tela aqui.'); return; }
+  const q=Number($('quality').value);
+  try{
+    screenStream=await navigator.mediaDevices.getDisplayMedia({
+      video:{width:{ideal:q},height:{ideal:Math.round(q*9/16)},frameRate:{ideal:q>=1440?60:30,max:q>=1440?60:30},cursor:'motion'},
+      audio: callSafeMode ? false : {systemAudio:'include'}
+    });
+    const track=screenStream.getVideoTracks()[0]; track.addEventListener('ended',stopShare,{once:true});
+    renderLocal(); renderPeers();
+    for(const p of peers.values()) await makeSenderPC(p.id);
+    send({type:'share-state',sharing:true}); $('share').disabled=true; $('stop').disabled=false;
+    setStatus('Transmitindo • baixa latência');
+  }catch(e){ screenStream=null; setStatus('Pronto'); }
+}
+function stopShare(){
+  if(!screenStream) return;
+  send({type:'share-state',sharing:false});
+  screenStream.getTracks().forEach(t=>{try{t.stop()}catch{}}); screenStream=null;
+  for(const [id,pc] of sendingPCs){ try{pc.close()}catch{} sendingPCs.delete(id); }
+  $('localTile')?.remove(); renderEmpty(); renderPeers(); $('share').disabled=false; $('stop').disabled=true; setStatus('Conectado');
+}
+function updateCallSafeUI(){ const b=$('callSafe'); if(!b) return; b.textContent = callSafeMode ? '📞 Modo chamada: ON' : '📞 Modo chamada'; b.classList.toggle('primary', callSafeMode); b.setAttribute('aria-pressed', String(callSafeMode)); }
+function setCallSafeMode(enabled){ callSafeMode=!!enabled; try{localStorage.setItem('screen-room-call-safe',callSafeMode?'1':'0');}catch{}; if(screenStream){ screenStream.getAudioTracks().forEach(t=>t.enabled=!callSafeMode && !audioMuted); } updateCallSafeUI(); showToast(callSafeMode ? 'Modo chamada: áudio do sistema não será enviado.' : 'Modo chamada desativado.'); }
+$('share').onclick=share; $('stop').onclick=stopShare;
+$('callSafe').onclick=()=>setCallSafeMode(!callSafeMode);
+updateCallSafeUI();
+$('mute').onclick=()=>{ audioMuted=!audioMuted; if(screenStream) screenStream.getAudioTracks().forEach(t=>t.enabled=!audioMuted && !callSafeMode); $('mute').textContent=audioMuted?'🔇':'🔊'; };
+$('quality').onchange=async()=>{ for(const pc of sendingPCs.values()) await applyQuality(pc); if(screenStream){ const v=screenStream.getVideoTracks()[0]; try{const q=Number($('quality').value); await v.applyConstraints({width:{ideal:q},height:{ideal:Math.round(q*9/16)},frameRate:{ideal:q>=1440?60:30,max:q>=1440?60:30}})}catch{} } };
+$('fullscreenAll').onclick=()=>{ const tile=document.querySelector('#localTile')||document.querySelector('.tile'); if(tile) fullscreenTile(tile); };
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  $('installApp')?.classList.add('show');
+});
+$('installApp')?.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  try { await deferredInstallPrompt.userChoice; } catch {}
+  deferredInstallPrompt = null;
+  $('installApp')?.classList.remove('show');
+});
+window.addEventListener('appinstalled', () => {
+  $('installApp')?.classList.remove('show');
+  showToast('Screen Room instalado como aplicativo!');
+});
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(err => console.warn('Service Worker:', err)));
+}
+
+const params=new URLSearchParams(location.search); const roomFromUrl=params.get('room'); if(roomFromUrl){ $('room').value=roomFromUrl.toUpperCase(); $('copyLink').classList.remove('hide'); }
+</script>
+</body>
+</html>

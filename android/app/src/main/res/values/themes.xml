@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.ScreenRoom" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">sans-serif-rounded</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/deep</item>
+        <item name="android:navigationBarColor">@color/deep</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

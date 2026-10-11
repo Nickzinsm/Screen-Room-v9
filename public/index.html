@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#65ccec">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="Seu lugar para conversar, reunir amigos e compartilhar a tela. Screen Room Frutiger Aero.">
+  <title>Screen Room • seu lugar de encontro</title>
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/app.css">
+  <script src="/call.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <button id="nav-toggle" class="icon-button mobile-only" aria-label="Abrir comunidades e canais">☰</button>
+    <a class="brand" href="/"><img src="/icons/icon.svg" alt=""><span>Screen <b>Room</b><small>seu lugar de encontro</small></span></a>
+    <span class="top-note">Conversas que aproximam.</span>
+    <div class="top-actions">
+      <a href="/salas.html" class="button subtle" title="Salas públicas temporárias, sem conta">Salas por código</a>
+      <button id="install" class="button hidden">Instalar app</button>
+      <button id="theme" class="theme-button" aria-label="Ativar tema Night">☀ Claro</button>
+    </div>
+  </header>
+  <main id="auth" class="auth-layout">
+    <section class="auth-story">
+      <span class="eyebrow">UMA JANELA PARA ESTAR JUNTO</span>
+      <h1>Seu mundo.<br>Seus amigos.<br><em>Sua sala.</em></h1>
+      <p>Crie uma comunidade, coloque a conversa em dia e compartilhe o que está na sua tela.</p>
+      <div class="story-badges"><span>◈ Comunidades</span><span>♬ Voz e vídeo</span><span>↗ Tela compartilhada</span></div>
+      <div class="aero-orb" aria-hidden="true"><span>◈</span><i></i></div>
+    </section>
+    <section class="auth-card glass">
+      <div class="card-symbol">◈</div><span class="eyebrow">BEM-VINDO AO SCREEN ROOM</span>
+      <h2 id="auth-title">Bom ter você aqui.</h2><p id="auth-subtitle">Entre para encontrar sua comunidade.</p>
+      <div class="auth-tabs"><button id="login-tab" class="selected">Entrar</button><button id="register-tab">Criar conta</button></div>
+      <form id="auth-form">
+        <label id="name-field" class="hidden">Como quer ser chamado?<input id="display-name" maxlength="32" autocomplete="nickname" placeholder="Seu nome"></label>
+        <label>Nome de usuário<input id="username" required minlength="3" maxlength="24" autocomplete="username" pattern="[a-zA-Z0-9_.\-]{3,24}" placeholder="seu.usuario"></label>
+        <label>Senha<input id="password" type="password" required minlength="8" maxlength="128" autocomplete="current-password" placeholder="Pelo menos 8 caracteres"></label>
+        <p id="auth-error" class="error" role="alert"></p>
+        <button id="auth-submit" class="button primary wide" type="submit">Entrar no Screen Room <span>↗</span></button>
+      </form>
+      <p class="small-note">Sua conta pertence a esta instância do Screen Room. Guarde sua senha; esta edição não envia recuperação por e-mail.</p>
+      <p id="auth-storage" class="storage-note hidden">Esta instância está em modo temporário. As contas se perdem quando o servidor reinicia.</p>
+    </section>
+  </main>
+  <main id="workspace" class="workspace hidden">
+    <div id="drawer-shade" class="drawer-shade hidden"></div>
+    <nav id="communities" class="community-rail" aria-label="Comunidades"></nav>
+    <aside id="sidebar" class="sidebar glass">
+      <div class="side-title"><div><span class="eyebrow">SEU ESPAÇO</span><h2 id="community-title">Conversas</h2></div><button id="community-menu" class="icon-button" aria-label="Opções da comunidade">⋯</button></div>
+      <div class="side-scroll">
+        <div class="section-caption"><span id="channels-label">CONVERSAS PRIVADAS</span><button id="add-channel" class="icon-button" aria-label="Adicionar canal ou conversa">+</button></div>
+        <div id="channel-list"></div>
+        <button id="invite" class="invite-button hidden">↗ Convidar amigos</button>
+        <div class="side-decoration"><span>◈</span><p>Um pouco mais perto,<br>mesmo de longe.</p></div>
+      </div>
+      <div class="account-panel"><span id="my-avatar" class="avatar"></span><button id="profile" class="account-name"><strong id="my-name"></strong><small id="my-username"></small></button><button id="settings" class="icon-button" aria-label="Configurações">⚙</button></div>
+    </aside>
+    <section class="conversation glass">
+      <div id="storage-banner" class="storage-banner hidden"><span>Modo temporário: contas e mensagens se perdem em reinícios.</span><button id="backup-banner">Baixar backup</button></div>
+      <header class="conversation-header"><span id="channel-icon" class="channel-symbol">◈</span><div class="channel-heading"><h2 id="channel-title">Vamos começar?</h2><small id="channel-subtitle">Escolha um canal para conversar.</small></div><div class="conversation-actions"><button id="pins" class="icon-button" title="Mostrar mensagens fixadas" aria-label="Mostrar mensagens fixadas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 3 8 0-1 7 3 4H6l3-4zM12 14v7"/></svg></button><button id="search-toggle" class="icon-button" aria-label="Pesquisar mensagens carregadas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg></button><button id="members-toggle" class="icon-button" aria-label="Mostrar membros"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21v-3a7 7 0 0 1 14 0v3z"/></svg></button></div></header>
+      <div id="search-row" class="search-row hidden"><input id="search" placeholder="Pesquisar nas mensagens carregadas…" aria-label="Pesquisar mensagens"><button id="search-close" class="icon-button" aria-label="Fechar pesquisa">×</button></div>
+      <div id="voice-stage" class="voice-stage hidden">
+        <div class="voice-heading"><div><span class="eyebrow">ESTAR JUNTO FAZ BEM</span><h3 id="voice-title">Sala de conversa</h3></div><span id="call-status" class="pill">Fora da chamada</span></div>
+        <div id="videos" class="video-grid"></div>
+        <div id="call-empty" class="call-empty"><div class="call-orb">♬</div><p>Uma sala, muitas histórias.</p><small>Entre para conversar por voz, abrir a câmera ou compartilhar a tela.</small></div>
+        <div class="call-toolbar"><button id="call-join" class="button primary">Entrar na chamada</button><button id="mic" class="button hidden">Microfone</button><button id="camera" class="button hidden">Câmera</button><button id="share" class="button hidden">Compartilhar tela</button><button id="call-leave" class="button danger hidden">Sair</button><select id="quality" class="hidden" aria-label="Qualidade da tela"><option value="720">720p • 30 fps</option><option value="1080" selected>1080p • 30 fps</option><option value="1440">1440p • 30 fps</option></select><label id="system-audio-label" class="check-label hidden"><input id="system-audio" type="checkbox"> Áudio da tela</label></div>
+        <button id="sound-unlock" class="button hidden">Ativar áudio recebido</button>
+      </div>
+      <div id="welcome" class="welcome"><span class="welcome-symbol">◈</span><span class="eyebrow">SEU PRÓXIMO ENCONTRO COMEÇA AQUI</span><h2>Abra espaço para seus amigos.</h2><p>Crie sua primeira comunidade ou entre com um convite.<br>Depois, escolha um canal e comece a conversa.</p><div class="welcome-actions"><button id="welcome-create" class="button primary">+ Criar comunidade</button><button id="welcome-join" class="button">Tenho um convite</button></div></div>
+      <div id="messages" class="messages hidden" role="log" aria-label="Mensagens"></div>
+      <div id="typing" class="typing" aria-live="polite"></div>
+      <form id="composer" class="composer hidden"><div id="reply-bar" class="reply-bar hidden"></div><div class="composer-row"><button id="emoji" class="icon-button" type="button" aria-label="Adicionar emoji">☺</button><textarea id="message-input" rows="1" maxlength="4000" placeholder="Escreva uma mensagem…" aria-label="Mensagem"></textarea><button class="send-button" type="submit" aria-label="Enviar mensagem">↗</button></div><span class="composer-hint">Enter envia · Shift + Enter quebra a linha</span></form>
+    </section>
+    <aside id="members" class="members glass"><div class="section-caption">MEMBROS <span id="member-count" class="pill">0</span></div><div id="member-list"></div><div class="members-footer">Boas conversas começam<br>com um simples “oi”. <span>✦</span></div></aside>
+  </main>
+  <dialog id="dialog" class="glass"><div class="dialog-top"><h2 id="dialog-title"></h2><button id="dialog-close" class="icon-button" aria-label="Fechar">×</button></div><div id="dialog-body"></div><p id="dialog-error" class="error" role="alert"></p></dialog>
+  <div id="toast" class="toast hidden" role="status"></div>
+</body>
+</html>
